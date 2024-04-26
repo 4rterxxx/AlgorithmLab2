@@ -108,8 +108,9 @@ int binSearch(vector<int> arr, int target) {
 
 // Вспомогательные функции 
 
-void create_ordered_array_x(vector<int>& x, vector<Rectangle>& arr) {
+void create_ordered_array_x_y(vector<int>& x, vector<int>& y, vector<Rectangle>& arr) {
     unordered_set<int> set_x;
+    unordered_set<int> set_y;
     for (auto& rec : arr) {
         if (set_x.find(rec.x1) == set_x.end()) {
             x.push_back(rec.x1);
@@ -119,12 +120,6 @@ void create_ordered_array_x(vector<int>& x, vector<Rectangle>& arr) {
             x.push_back(rec.x2);
             set_x.emplace(rec.x2);
         }
-    }
-    sort(x.begin(), x.end());
-}
-void create_ordered_array_y(vector<int>& y, vector<Rectangle>& arr) {
-    unordered_set<int> set_y;
-    for (auto& rec : arr) {
         if (set_y.find(rec.y1) == set_y.end()) {
             y.push_back(rec.y1);
             set_y.emplace(rec.y1);
@@ -134,6 +129,7 @@ void create_ordered_array_y(vector<int>& y, vector<Rectangle>& arr) {
             set_y.emplace(rec.y2);
         }
     }
+    sort(x.begin(), x.end());
     sort(y.begin(), y.end());
 }
 
@@ -207,8 +203,7 @@ vector<int> search_1(vector<Rectangle>& arr, vector<Point>& req) {
 // Алгоритм на карте
 
 vector<vector<int>> search_2_preporation(vector<int>& x, vector<int>& y, vector<Rectangle>& arr) {
-    create_ordered_array_x(x, arr);
-    create_ordered_array_y(y, arr);
+    create_ordered_array_x_y(x, y, arr);
     vector<vector<int>> matrix(x.size() - 1, vector<int>(y.size() - 1, 0));
     for (auto& rec : arr) {
         int left_x = binSearch(x, rec.x1);
@@ -245,8 +240,7 @@ vector<int> search_2(vector<Rectangle>& arr, vector<Point>& req) {
 // Алгоритм на дереве
 
 void search_3_preporation(vector<Rectangle>& arr, vector<Line>& lines, vector<int>& x, vector<int>& y, unordered_map<int, int>& kids) {
-    create_ordered_array_x(x, arr);
-    create_ordered_array_y(y, arr);
+    create_ordered_array_x_y(x, y, arr);
     for (auto& rec : arr) {
         lines.push_back(Line{ rec.x1, rec.y1, rec.y2, true });
         lines.push_back(Line{ rec.x2, rec.y1, rec.y2, false });
@@ -296,7 +290,7 @@ vector<int> search_3(vector<Rectangle>& arr, vector<Point>& req) {
 
 // Функция замера времени
 
-void check_time(vector<Rectangle>& arr, vector<Point>& req, vector<int> (*Search)(vector<Rectangle>& arr, vector<Point>& req)) {
+void check_time(vector<Rectangle>& arr, vector<Point>& req, vector<int>(*Search)(vector<Rectangle>& arr, vector<Point>& req)) {
     long double res = 0;
     for (int i = 0; i < Num_Of_Tests; i++) {
         auto start_time = chrono::steady_clock::now();
@@ -313,17 +307,17 @@ void check_time(vector<Rectangle>& arr, vector<Point>& req, vector<int> (*Search
 int main()
 {
     setlocale(LC_ALL, "ru");
-    
+
     vector<Rectangle> arr(N);
     vector<Point> requests(M);
 
-    
+
     generate_rectangles(arr);
     generate_requests(requests);
     check_time(arr, requests, search_1);
     check_time(arr, requests, search_2);
     check_time(arr, requests, search_3);
     cout << "\n";
-    
-    
+
+
 }
