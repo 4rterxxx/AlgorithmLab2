@@ -7,8 +7,8 @@
 
 using namespace std;
 
-int N = 1024; // Колличество прямоугольников
-int M = 1024; // Колличество точек
+int N = 100; // Колличество прямоугольников
+int M = 1000000; // Колличество точек
 
 int Num_Of_Tests = 1; // Колличество тестов
 
@@ -23,9 +23,9 @@ public:
 
 class Point {
 public:
-    int x, y, order;
+    int x, y;
     Point() : x{ 0 }, y{ 0 } {}
-    Point(int x, int y, int order) : x{ x }, y{ y }, order{ order } {}
+    Point(int x, int y) : x{ x }, y{ y } {}
     bool operator < (const Point& str) const
     {
         return (x < str.x);
@@ -83,7 +83,7 @@ void generate_rectangles(vector<Rectangle>& vec) {
 }
 void generate_requests(vector<Point>& vec) {
     for (int i = 0; i < vec.size(); i++) {
-        vec[i] = Point{ i * 20 + 1, i * 20 + 1, i };
+        vec[i] = Point{ i * 20 + 1, i * 20 + 1};
     }
 }
 
@@ -223,15 +223,16 @@ vector<int> search_2(vector<Rectangle>& arr, vector<Point>& req) {
     }
     vector<int> x, y;
     auto matrix = search_2_preporation(x, y, arr);
-    vector<int> res;
+    vector<int> res(req.size());
+    int res_id = 0;
     for (auto& point : req) {
         auto res_x = binSearch(x, point.x);
         auto res_y = binSearch(y, point.y);
         if ((res_x < 0 || res_x >= x.size() - 1) || (res_y < 0 || res_y >= y.size() - 1)) {
-            res.push_back(0);
+            res[res_id++] = 0;
         }
         else {
-            res.push_back(matrix[res_x][res_y]);
+            res[res_id++] = matrix[res_x][res_y];
         }
     }
     return res;
