@@ -1,20 +1,21 @@
 ﻿  AlgorithmLab2.cpp
-C:\Users\User\Desktop\C++\AlgorithmLab2\AlgorithmLab2\AlgorithmLab2.cpp(93,41): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\User\Desktop\C++\AlgorithmLab2\AlgorithmLab2\AlgorithmLab2.cpp(88,41): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629\include\utility(190,48): warning C4267: инициализация: преобразование из "size_t" в "_Ty2"; возможна потеря данных
           with
           [
               _Ty2=int
           ]
-C:\Users\User\Desktop\C++\AlgorithmLab2\AlgorithmLab2\AlgorithmLab2.cpp(265): message : выполняется компиляция ссылки на экземпляр шаблон функции "std::pair<int,int>::pair<int,unsigned __int64,0>(_Other1 &&,_Other2 &&) noexcept"
+C:\Users\User\Desktop\C++\AlgorithmLab2\AlgorithmLab2\AlgorithmLab2.cpp(271): message : выполняется компиляция ссылки на экземпляр шаблон функции "std::pair<int,int>::pair<int,unsigned __int64,0>(_Other1 &&,_Other2 &&) noexcept"
           with
           [
               _Other1=int,
               _Other2=unsigned __int64
           ]
-C:\Users\User\Desktop\C++\AlgorithmLab2\AlgorithmLab2\AlgorithmLab2.cpp(265): message : выполняется компиляция ссылки на экземпляр шаблон функции "std::pair<int,int>::pair<int,unsigned __int64,0>(_Other1 &&,_Other2 &&) noexcept"
+C:\Users\User\Desktop\C++\AlgorithmLab2\AlgorithmLab2\AlgorithmLab2.cpp(271): message : выполняется компиляция ссылки на экземпляр шаблон функции "std::pair<int,int>::pair<int,unsigned __int64,0>(_Other1 &&,_Other2 &&) noexcept"
           with
           [
               _Other1=int,
               _Other2=unsigned __int64
           ]
+C:\Users\User\Desktop\C++\AlgorithmLab2\AlgorithmLab2\AlgorithmLab2.cpp(179): warning C4715: insert: значение возвращается не при всех путях выполнения
   AlgorithmLab2.vcxproj -> C:\Users\User\Desktop\C++\AlgorithmLab2\x64\Debug\AlgorithmLab2.exe

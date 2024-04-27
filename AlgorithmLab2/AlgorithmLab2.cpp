@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int N = 100; // Колличество прямоугольников
+int N = 10; // Колличество прямоугольников
 int M = 1000000; // Колличество точек
 
 int Num_Of_Tests = 1; // Колличество тестов
@@ -63,14 +63,9 @@ struct Node {
         this->val = other->val;
         this->border = other->border;
         this->marker = other->marker;
-        if (other->left != nullptr) {
-            this->left = new Node{ other->left };
-            this->right = new Node{ other->right };
-        }
-        else {
-            this->left = nullptr;
-            this->right = nullptr;
-        }
+        this->left = other->left;
+        this->right = other->right;
+        
     }
 };
 
@@ -140,44 +135,55 @@ void create_hash_of_kids(vector<int>& y, unordered_map<int, int>& kids) {
         kids[y[i]] = i;
     }
 }
-void insert(Node* root, int left, int right, int op, unordered_map<int, int>& kids) {
-    if (left >= right) return;
+Node* insert(Node* root, int left, int right, int op, unordered_map<int, int>& kids) {
+    if (left >= right) return root;
     if (root->marker != 0) {
         root->val += root->marker * (kids[root->border.second] - kids[root->border.first]);
-        if (root->left != nullptr) root->left->marker += root->marker;
-        if (root->right != nullptr) root->right->marker += root->marker;
+        if (root->left != nullptr) {
+            root->left = new Node{ root->left };
+            root->left->marker += root->marker;
+        }
+        if (root->right != nullptr) {
+            root->right = new Node{ root->right };
+            root->right->marker += root->marker;
+        }
         root->marker = 0;
     }
     if (root->border.first == left && root->border.second == right) {
+        root = new Node{ root };
         root->val += op * (kids[right] - kids[left]);
-        if (root->left != nullptr) root->left->marker += op;
-        if (root->right != nullptr) root->right->marker += op;
+        if (root->left != nullptr) {
+            root->left = new Node{ root->left };
+            root->left->marker += op;
+        }
+        if (root->right != nullptr) {
+            root->right = new Node{ root->right };
+            root->right->marker += op;
+        }
+        return root;
     }
     else if (root->border.first <= left && root->border.second >= right) {
+        root = new Node{ root };
         if (root->left == nullptr || root->right == nullptr) {
             root->val += op * (kids[right] - kids[left]);
+            return root;
         }
         else {
             root->val += op * (kids[right] - kids[left]);
-            insert(root->left, left, min(right, root->left->border.second), op, kids);
-            insert(root->right, max(left, root->right->border.first), right, op, kids);
+            root->left = insert(root->left, left, min(right, root->left->border.second), op, kids);
+            root->right = insert(root->right, max(left, root->right->border.first), right, op, kids);
         }
+        return root;
     }
 
 }
-int find_in_tree(Node* root, int point, unordered_map<int, int>& kids) {
-    if (root->marker != 0) {
-        root->val += root->marker * (kids[root->border.second] - kids[root->border.first]);
-        if (root->left != nullptr) root->left->marker += root->marker;
-        if (root->right != nullptr) root->right->marker += root->marker;
-        root->marker = 0;
-    }
+int find_in_tree(Node* root, int point, int modifier, unordered_map<int, int>& kids) {
     if (root->border.first <= point && root->border.second > point) {
         if (root->left == nullptr || root->right == nullptr) {
-            return root->val;
+            return root->val + modifier + root->marker;
         }
         else {
-            return max(find_in_tree(root->left, point, kids), find_in_tree(root->right, point, kids));
+            return max(find_in_tree(root->left, point, modifier + root->marker, kids), find_in_tree(root->right, point, modifier + root->marker, kids));
         }
     }
     else {
@@ -266,23 +272,22 @@ vector<int> search_3(vector<Rectangle>& arr, vector<Point>& req) {
     int prev = x[0];
     for (auto& line : lines) {
         if (prev != line.x) {
-            persistent.push_back(new Node{ root });
+            persistent.push_back(root);
             prev = line.x;
         }
         if (line.isStart) {
-            insert(root, line.y1, line.y2, 1, kids);
+            root = insert(root, line.y1, line.y2, 1, kids);
         }
         else {
-            insert(root, line.y1, line.y2, -1, kids);
+            root = insert(root, line.y1, line.y2, -1, kids);
         }
     }
-    persistent.push_back(new Node{ root });
+    persistent.push_back(root);
 
     for (int i = 0; i < req.size(); i++) {
         auto ind = binSearch(x, req[i].x);
-
         if (ind >= 0 && ind < persistent.size()) {
-            result[i] = find_in_tree(persistent[ind], req[i].y, kids);
+            result[i] = find_in_tree(persistent[ind], req[i].y, 0, kids);
         }
 
     }
@@ -316,9 +321,18 @@ int main()
     generate_rectangles(arr);
     generate_requests(requests);
     check_time(arr, requests, search_1);
-    check_time(arr, requests, search_2);
+    //check_time(arr, requests, search_2);
     check_time(arr, requests, search_3);
+    auto res_1 = search_1(arr, requests);
+    auto res_3 = search_3(arr, requests);
+    bool otvet = true;
+    for (int i = 0; i < res_1.size(); i++) {
+        if (res_1[i] != res_3[i]) {
+            otvet = false;
+        }
+    }
     cout << "\n";
+    cout << otvet;
 
 
 }
