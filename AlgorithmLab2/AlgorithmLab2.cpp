@@ -7,8 +7,8 @@
 
 using namespace std;
 
-int N = 1024; // Колличество прямоугольников
-int M = 1048576; // Колличество точек
+int N = 512; // Колличество прямоугольников
+int M = 263000; // Колличество точек
 
 int Num_Of_Tests = 10; // Колличество тестов
 
@@ -307,26 +307,27 @@ void check_time(vector<Rectangle>& arr, vector<Point>& req, vector<int>(*Search)
     }
 
     res /= Num_Of_Tests;
-    cout << res << "(мс)\n";
+    cout << res << " ";
 }
 
 int main()
 {
     setlocale(LC_ALL, "ru");
 
-    vector<Rectangle> arr(N);
-    vector<Point> requests(M);
-
-
-    generate_rectangles(arr);
-    generate_requests(requests);
-    cout << "Колличество прямоугольников: " << N << "\n";
-    cout << "Колличество точек: " << M << "\n";
-    cout << "Результаты перебора: ";
-    check_time(arr, requests, search_1);
-    cout << "Результаты сжатой матрицы: ";
-    check_time(arr, requests, search_2);
-    cout << "Результаты персистентного дерева отрезков: ";
-    check_time(arr, requests, search_3);  
-
+    vector<Rectangle> arr;
+    vector<Point> requests;
+    cout << "N M  1st  2nd  3rd"<< "\n";
+    for (int i = 1; i < 2200; i *= 2) {
+        N = i;
+        M = i * i;
+        arr.resize(N);
+        requests.resize(M);
+        generate_rectangles(arr);
+        generate_requests(requests);
+        cout << N << " " << M << " ";
+        check_time(arr, requests, search_1);
+        check_time(arr, requests, search_2);
+        check_time(arr, requests, search_3);
+        cout << "\n";
+    }
 }
