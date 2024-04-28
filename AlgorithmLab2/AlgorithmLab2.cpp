@@ -7,10 +7,10 @@
 
 using namespace std;
 
-int N = 10; // Колличество прямоугольников
-int M = 1000000; // Колличество точек
+int N = 1024; // Колличество прямоугольников
+int M = 1048576; // Колличество точек
 
-int Num_Of_Tests = 1; // Колличество тестов
+int Num_Of_Tests = 10; // Колличество тестов
 
 // Вспомогательные структуры
 
@@ -307,7 +307,7 @@ void check_time(vector<Rectangle>& arr, vector<Point>& req, vector<int>(*Search)
     }
 
     res /= Num_Of_Tests;
-    cout << res << " ";
+    cout << res << "(мс)\n";
 }
 
 int main()
@@ -320,19 +320,13 @@ int main()
 
     generate_rectangles(arr);
     generate_requests(requests);
+    cout << "Колличество прямоугольников: " << N << "\n";
+    cout << "Колличество точек: " << M << "\n";
+    cout << "Результаты перебора: ";
     check_time(arr, requests, search_1);
-    //check_time(arr, requests, search_2);
-    check_time(arr, requests, search_3);
-    auto res_1 = search_1(arr, requests);
-    auto res_3 = search_3(arr, requests);
-    bool otvet = true;
-    for (int i = 0; i < res_1.size(); i++) {
-        if (res_1[i] != res_3[i]) {
-            otvet = false;
-        }
-    }
-    cout << "\n";
-    cout << otvet;
-
+    cout << "Результаты сжатой матрицы: ";
+    check_time(arr, requests, search_2);
+    cout << "Результаты персистентного дерева отрезков: ";
+    check_time(arr, requests, search_3);  
 
 }
